@@ -108,7 +108,3 @@ module ICMP
   end
 end
 
-statistics = ICMP::Ping.new("8.8.8.8").ping(count: 3) do |request|
-  puts "#{request.sequence} #{request.status} took #{request.roundtrip_time}ms"
-end
-p statistics
