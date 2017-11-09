@@ -1,4 +1,4 @@
-name: ping
+name: icmp
 version: 0.1.0
 
 authors:

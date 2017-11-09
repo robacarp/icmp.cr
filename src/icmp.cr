@@ -18,6 +18,10 @@ module ICMP
     end
 
     def initialize(@host : String)
+      unless Socket.ip? @host
+        raise "ICMP Ping must be targeted at an IP Address"
+      end
+
       @requests = [] of EchoRequest
       @address = Socket::IPAddress.new @host, 0
       @socket = IPSocket.new Socket::Family::INET, Socket::Type::DGRAM, Socket::Protocol::ICMP
@@ -107,4 +111,3 @@ module ICMP
 
   end
 end
-
