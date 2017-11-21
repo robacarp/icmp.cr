@@ -12,8 +12,14 @@ module ICMP
     property sender_id = 1_u16
 
     def self.ping(host)
+      ping(host) {|r|}
+    end
+
+    def self.ping(host, &block)
       instance = new(host)
-      instance.ping
+      instance.ping do |r|
+        yield r
+      end
       instance.statistics
     end
 
@@ -24,7 +30,19 @@ module ICMP
 
       @requests = [] of EchoRequest
       @address = Socket::IPAddress.new @host, 0
-      @socket = IPSocket.new Socket::Family::INET, Socket::Type::DGRAM, Socket::Protocol::ICMP
+
+      socket_type = Socket::Type::RAW
+
+      {% if flag?(:darwin) %}
+        socket_type = Socket::Type::DGRAM
+      {% end %}
+
+      @socket = if @host.includes? ":"
+        # doesnt work
+        IPSocket.new Socket::Family::INET6, Socket::Type::DGRAM, Socket::Protocol.new(58)
+      else
+        IPSocket.new Socket::Family::INET, socket_type, Socket::Protocol::ICMP
+      end
     end
 
     def ping(*, count = 1)
