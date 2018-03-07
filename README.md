@@ -31,13 +31,17 @@ Outputs:
 {count: 3, success: 3, fail: 0, average_response: 29.333333333333332}
 ```
 
-## Notes On Permissions
+## Permissions
 
-This implementation requires raw sockets. On Linux this means that you either need to run as root or to set the correct capability on the executable. You can do this with:
-```
-setcap cap_net_raw=ep executable-name
-```
-If you lack the capability the code will throw an `Errno` exception with `#e == LibC::EPERM`
+On linux, this ping implementation uses a raw IP socket, which can run into some permission issues. After compiling, if you run into the error message `failed to create socket:: Operation not permitted (Errno)`, the kernel is probably blocking you.
+
+To get around this, either run as root/sudo, or use [`setcap`](https://linux.die.net/man/8/setcap) to award `cap_net_raw` to your executable.
+
+You can do this with `setcap cap_net_raw=ep <executable-name>`.
+
+See `man 7 capabilities` and `man 8 setcap` for more information.
+
+Thanks to @jocata and @duraki for helping here.
 
 ## Contributing
 
