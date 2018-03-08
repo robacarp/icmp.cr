@@ -49,18 +49,23 @@ module ICMP
       ping(count: count) { |response| ; }
     end
 
-    def ping(*, count = 1, &block)
+    def ping(*, count = 1, timeout = 10, delay = 0.1, &block)
       count.times do
         request = EchoRequest.new(@requests.size.to_u16, sender_id)
         @requests.push request
         request.sent_at Time.now
         send request
 
-        if responded_request = receive_response
-          yield responded_request
+        @socket.read_timeout = timeout
+        begin
+          if responded_request = receive_response
+            yield responded_request
+          end
+        rescue IO::Timeout
+          # act like nothing happened (which it didn't)
         end
 
-        sleep 0.1
+        sleep delay
       end
 
       statistics
