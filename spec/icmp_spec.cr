@@ -2,6 +2,7 @@ require "spec"
 require "../src/icmp"
 
 HOST = "127.0.0.1"
+BAD_HOST = "1.1.1.1" # should be a host that does not respond to ping
 
 describe "icmp" do
 
@@ -36,6 +37,52 @@ describe "icmp" do
     yield_count.should eq ping_count
   end
 
+  it "honours short inter-ping delay" do
+    ping_count = 3
+    delay = 0.1
+
+    start_time = Time.now
+    
+    ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
+    end
+
+    elapsed = (Time.now - start_time).to_f
+
+    elapsed.should be >= delay * (ping_count-1)
+  end
+
+  it "honours long inter-ping delay" do
+    ping_count = 3
+    delay = 3.0
+
+    start_time = Time.now
+    
+    ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
+    end
+
+    elapsed = (Time.now - start_time).to_f
+
+    elapsed.should be >= delay * (ping_count-1)
+  end
+  
+  it "times out waiting for unreachable host" do
+    ping_count = 3
+    yield_count = 0
+    timeout = 1
+
+    start_time = Time.now
+
+    ICMP::Ping.new(BAD_HOST).ping(count: ping_count, timeout: timeout) do |request|
+      yield_count += 1
+    end
+
+    elapsed = (Time.now - start_time).to_i
+    
+    yield_count.should eq 0
+    elapsed.should be < ping_count * timeout + 1
+
+  end
+  
   describe "response object" do
     it "has the roundtrip time" do
       ICMP::Ping.ping(HOST) do |response|
