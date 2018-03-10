@@ -96,7 +96,7 @@ describe "icmp" do
       end
     end
 
-    it "has the respnose status" do
+    it "has the response status" do
       ICMP::Ping.ping(HOST) do |response|
         response.status.should be_a Symbol
       end
