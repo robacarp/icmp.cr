@@ -2,6 +2,7 @@ require "spec"
 require "../src/icmp"
 
 HOST = "127.0.0.1"
+BAD_HOST = "1.1.1.1" # should be a host that does not respond to ping
 
 describe "icmp" do
 
@@ -36,6 +37,45 @@ describe "icmp" do
     yield_count.should eq ping_count
   end
 
+  it "honours short inter-ping delay" do
+    ping_count = 3
+    delay = 0.1
+
+    elapsed = Time.measure do
+      ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
+      end
+    end.to_f
+
+    elapsed.should be_close(delay * ping_count, delay / 2.0)
+  end
+
+  it "honours long inter-ping delay" do
+    ping_count = 3
+    delay = 3.0
+
+    elapsed = Time.measure do
+      ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
+      end
+    end.to_f
+
+    elapsed.should be_close(delay * ping_count, delay / 2.0)
+  end
+  
+  it "times out waiting for unreachable host" do
+    ping_count = 3
+    yield_count = 0
+    timeout = 1
+
+    elapsed = Time.measure do
+      ICMP::Ping.new(BAD_HOST).ping(count: ping_count, timeout: timeout) do |request|
+        yield_count += 1 if request.status != :invalid_response
+      end
+    end.to_f
+    
+    yield_count.should eq 0
+    elapsed.should be_close(ping_count * timeout, timeout / 2.0)
+  end
+  
   describe "response object" do
     it "has the roundtrip time" do
       ICMP::Ping.ping(HOST) do |response|
@@ -49,7 +89,7 @@ describe "icmp" do
       end
     end
 
-    it "has the respnose status" do
+    it "has the response status" do
       ICMP::Ping.ping(HOST) do |response|
         response.status.should be_a Symbol
       end
