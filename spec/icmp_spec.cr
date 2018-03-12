@@ -41,28 +41,24 @@ describe "icmp" do
     ping_count = 3
     delay = 0.1
 
-    start_time = Time.now
-    
-    ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
-    end
+    elapsed = Time.measure do
+      ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
+      end
+    end.to_f
 
-    elapsed = (Time.now - start_time).to_f
-
-    elapsed.should be >= delay * (ping_count-1)
+    elapsed.should be_close(delay * ping_count, delay / 2.0)
   end
 
   it "honours long inter-ping delay" do
     ping_count = 3
     delay = 3.0
 
-    start_time = Time.now
-    
-    ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
-    end
+    elapsed = Time.measure do
+      ICMP::Ping.new(HOST).ping(count: ping_count, delay: delay) do |request|
+      end
+    end.to_f
 
-    elapsed = (Time.now - start_time).to_f
-
-    elapsed.should be >= delay * (ping_count-1)
+    elapsed.should be_close(delay * ping_count, delay / 2.0)
   end
   
   it "times out waiting for unreachable host" do
@@ -70,17 +66,14 @@ describe "icmp" do
     yield_count = 0
     timeout = 1
 
-    start_time = Time.now
-
-    ICMP::Ping.new(BAD_HOST).ping(count: ping_count, timeout: timeout) do |request|
-      yield_count += 1
-    end
-
-    elapsed = (Time.now - start_time).to_i
+    elapsed = Time.measure do
+      ICMP::Ping.new(BAD_HOST).ping(count: ping_count, timeout: timeout) do |request|
+        yield_count += 1 if request.status != :invalid_response
+      end
+    end.to_f
     
     yield_count.should eq 0
-    elapsed.should be < ping_count * timeout + 1
-
+    elapsed.should be_close(ping_count * timeout, timeout / 2.0)
   end
   
   describe "response object" do
