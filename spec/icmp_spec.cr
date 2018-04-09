@@ -2,7 +2,7 @@ require "spec"
 require "../src/icmp"
 
 HOST = "127.0.0.1"
-BAD_HOST = "1.1.1.1" # should be a host that does not respond to ping
+BAD_HOST = "1.2.3.4" # should be a host that does not respond to ping
 
 describe "icmp" do
 
