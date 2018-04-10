@@ -37,7 +37,7 @@ describe "icmp" do
     yield_count.should eq ping_count
   end
 
-  it "honours short inter-ping delay" do
+  it "honors short delay" do
     ping_count = 3
     delay = 0.1
 
@@ -49,7 +49,7 @@ describe "icmp" do
     elapsed.should be_close(delay * ping_count, delay / 2.0)
   end
 
-  it "honours long inter-ping delay" do
+  it "honors long delay" do
     ping_count = 3
     delay = 3.0
 
@@ -60,7 +60,7 @@ describe "icmp" do
 
     elapsed.should be_close(delay * ping_count, delay / 2.0)
   end
-  
+
   it "times out waiting for unreachable host" do
     ping_count = 3
     yield_count = 0
@@ -68,14 +68,14 @@ describe "icmp" do
 
     elapsed = Time.measure do
       ICMP::Ping.new(BAD_HOST).ping(count: ping_count, timeout: timeout) do |request|
-        yield_count += 1 if request.status != :invalid_response
+        yield_count += 1 unless request.status == :invalid_response
       end
     end.to_f
-    
+
     yield_count.should eq 0
     elapsed.should be_close(ping_count * timeout, timeout / 2.0)
   end
-  
+
   describe "response object" do
     it "has the roundtrip time" do
       ICMP::Ping.ping(HOST) do |response|
