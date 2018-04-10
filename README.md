@@ -1,6 +1,6 @@
 # icmp.cr
 
-[![CircleCI](https://circleci.com/gh/robacarp/icmp.cr.svg?style=svg&circle-token=d1c8360e5ab8e504142af3724b4103b2b3b8c758)](https://circleci.com/gh/robacarp/icmp.cr) An implementation of ICMP Ping in Crystal.
+An implementation of ICMP Ping in Crystal.
 
 ## Installation
 
