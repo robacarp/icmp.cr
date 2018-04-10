@@ -11,11 +11,11 @@ module ICMP
     getter address
     property sender_id = 1_u16
 
-    def self.ping(host)
+    def self.ping(host, count = 1, timeout = 10, delay = 0.1)
       ping(host) {|r|}
     end
 
-    def self.ping(host, &block)
+    def self.ping(host, count = 1, timeout = 10, delay = 0.1, &block)
       instance = new(host)
       instance.ping do |r|
         yield r
@@ -45,7 +45,7 @@ module ICMP
       end
     end
 
-    def ping(*, count = 1)
+    def ping(*, count = 1, timeout = 10, delay = 0.1)
       ping(count: count) { |response| ; }
     end
 
