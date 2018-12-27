@@ -1,3 +1,5 @@
+[![Crystal Version](https://img.shields.io/badge/crystal-0.27-blue.svg?longCache=true&style=for-the-badge)](https://crystal-lang.org/)
+
 # icmp.cr
 
 An implementation of ICMP Ping in Crystal.
