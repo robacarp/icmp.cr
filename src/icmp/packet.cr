@@ -33,7 +33,7 @@ module ICMP
       checksum = checksum ^ 0xffff_ffff_u32
 
       # truncate the number and map back to 16 bits
-      checksum.to_u16
+      (checksum & 0xffff).to_u16
     end
 
     def check_checksum
