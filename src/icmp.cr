@@ -1,5 +1,4 @@
 require "socket"
-require "time"
 
 require "./icmp/**"
 
