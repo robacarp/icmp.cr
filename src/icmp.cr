@@ -61,7 +61,7 @@ module ICMP
           if responded_request = receive_response
             yield responded_request
           end
-        rescue IO::Timeout
+        rescue IO::TimeoutError
           # act like nothing happened (which it didn't)
         end
 
