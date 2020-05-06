@@ -1,6 +1,6 @@
 module ICMP
   class EchoRequest < Packet
-    TYPE = 8_u16
+    TYPE    = 8_u16
     MESSAGE = "ohai ICMP"
 
     getter sequence
@@ -15,7 +15,7 @@ module ICMP
       # Fill the packet with the message, skipping the first 4 16bit words
       @packet = Array(UInt16).new PACKET_LENGTH_16 do |i|
         if i > 4
-          MESSAGE[ i % MESSAGE.size ].ord.to_u16
+          MESSAGE[i % MESSAGE.size].ord.to_u16
         else
           0_u16
         end

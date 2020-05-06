@@ -4,15 +4,15 @@ require "./icmp/**"
 
 module ICMP
   IP_HEADER_SIZE_8 = 20
-  PACKET_LENGTH_8 = 16
-  PACKET_LENGTH_16 = 8
+  PACKET_LENGTH_8  = 16
+  PACKET_LENGTH_16 =  8
 
   class Ping
     getter address
     property sender_id = 1_u16
 
     def self.ping(host, count = 1, timeout = 10, delay = 0.1)
-      ping(host) {|r|}
+      ping(host) { |r| }
     end
 
     def self.ping(host, count = 1, timeout = 10, delay = 0.1, &block)
@@ -38,15 +38,15 @@ module ICMP
       {% end %}
 
       @socket = if @host.includes? ":"
-        # doesnt work
-        IPSocket.new Socket::Family::INET6, Socket::Type::DGRAM, Socket::Protocol.new(58)
-      else
-        IPSocket.new Socket::Family::INET, socket_type, Socket::Protocol::ICMP
-      end
+                  # doesnt work
+                  IPSocket.new Socket::Family::INET6, Socket::Type::DGRAM, Socket::Protocol.new(58)
+                else
+                  IPSocket.new Socket::Family::INET, socket_type, Socket::Protocol::ICMP
+                end
     end
 
     def ping(*, count = 1, timeout = 10, delay = 0.1)
-      ping(count: count) { |response| ; }
+      ping(count: count) { |response| }
     end
 
     def ping(*, count = 1, timeout = 10, delay = 0.1, &block)
@@ -76,19 +76,19 @@ module ICMP
     end
 
     def statistics
-      counts = @requests.group_by {|r| r.responded_to? }
+      counts = @requests.group_by { |r| r.responded_to? }
       success = counts[true]? || [] of Nil
       fail = counts[false]? || [] of Nil
 
-      total_response_time = @requests.map {|r| r.roundtrip_time }
-                                     .reject {|r| r == -1 }
-                                     .reduce(0.0) { |sum, time| sum += time }
+      total_response_time = @requests.map { |r| r.roundtrip_time }
+        .reject { |r| r == -1 }
+        .reduce(0.0) { |sum, time| sum += time }
 
       {
-        count: @requests.size,
-        success: success.size,
-        fail: fail.size,
-        average_response: total_response_time / @requests.size
+        count:            @requests.size,
+        success:          success.size,
+        fail:             fail.size,
+        average_response: total_response_time / @requests.size,
       }
     end
 
@@ -107,7 +107,7 @@ module ICMP
       timestamp = Time.local
 
       length = buffer.size
-      icmp = buffer[IP_HEADER_SIZE_8, length-IP_HEADER_SIZE_8]
+      icmp = buffer[IP_HEADER_SIZE_8, length - IP_HEADER_SIZE_8]
 
       response = EchoResponse.new(icmp, address)
       response.received_at timestamp
@@ -131,6 +131,5 @@ module ICMP
 
       request
     end
-
   end
 end

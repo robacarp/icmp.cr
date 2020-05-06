@@ -1,11 +1,10 @@
 require "spec"
 require "../src/icmp"
 
-HOST = "127.0.0.1"
+HOST     = "127.0.0.1"
 BAD_HOST = "1.2.3.4" # should be a host that does not respond to ping
 
 describe "icmp" do
-
   describe "class interface" do
     it "can be called with a block" do
       ICMP::Ping.ping(HOST) do |response|
@@ -107,4 +106,3 @@ describe "icmp" do
     end
   end
 end
-

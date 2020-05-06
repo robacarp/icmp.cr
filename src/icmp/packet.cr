@@ -70,6 +70,5 @@ module ICMP
 
       formatted += "#{n.to_s(16)})"
     end
-
   end
 end
