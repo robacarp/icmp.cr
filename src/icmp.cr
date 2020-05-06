@@ -53,7 +53,7 @@ module ICMP
       count.times do
         request = EchoRequest.new(@requests.size.to_u16, sender_id)
         @requests.push request
-        request.sent_at Time.now
+        request.sent_at Time.local
         send request
 
         @socket.read_timeout = timeout
@@ -61,7 +61,7 @@ module ICMP
           if responded_request = receive_response
             yield responded_request
           end
-        rescue IO::Timeout
+        rescue IO::TimeoutError
           # act like nothing happened (which it didn't)
         end
 
@@ -104,7 +104,7 @@ module ICMP
     private def receive_response : EchoRequest | Nil
       buffer = Bytes.new(PACKET_LENGTH_8 + IP_HEADER_SIZE_8)
       count, address = socket.receive buffer
-      timestamp = Time.now
+      timestamp = Time.local
 
       length = buffer.size
       icmp = buffer[IP_HEADER_SIZE_8, length-IP_HEADER_SIZE_8]
