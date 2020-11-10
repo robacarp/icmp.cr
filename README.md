@@ -1,8 +1,8 @@
-[![Crystal Version](https://img.shields.io/badge/crystal-0.34-blueviolet.svg?longCache=true&style=for-the-badge)](https://crystal-lang.org/)
+[![Crystal Version](https://img.shields.io/badge/crystal-0.35.1-blueviolet.svg?longCache=true&style=for-the-badge)](https://crystal-lang.org/)
 
 # icmp.cr
 
-An implementation of ICMP Ping in Crystal.
+A terse implementation of ICMP Ping in Crystal.
 
 ## Installation
 
