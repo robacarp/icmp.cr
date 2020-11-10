@@ -1,9 +1,9 @@
 name: icmp
-version: 0.0.3
+version: 0.1.0
 
 authors:
-  - Robert L Carpenter <robert@robacarp.com>
+  - robacarp
 
-crystal: 0.34.0
+crystal: 0.35.1
 
 license: MIT
