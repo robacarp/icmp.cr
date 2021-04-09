@@ -1,4 +1,4 @@
-[![Crystal Version](https://img.shields.io/badge/crystal-0.35.1-blueviolet.svg?longCache=true&style=for-the-badge)](https://crystal-lang.org/)
+[![Crystal Version](https://img.shields.io/badge/crystal-1.0-blueviolet.svg?longCache=true&style=for-the-badge)](https://crystal-lang.org/)
 
 # icmp.cr
 
