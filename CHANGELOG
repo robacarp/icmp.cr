@@ -1,3 +1,10 @@
+v0.2.1
+  - Fix version numbers.
+  - Indicate that it's compatible with Crystal >= 1.0.0, not just 1.0.0.
+
+v0.2.0
+  - Adding support for Crystal 1.0.0
+
 v0.0.3
   - Add timeout and delay parameters to all overloads of ping method
 
